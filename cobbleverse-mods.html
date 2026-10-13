@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COBBLEVERSE 모드 목록</title>
+<style>
+  :root { --bg:#fff; --fg:#1a1a1a; --sub:#666; --line:#ddd; --head:#f4f4f4; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161616; --fg:#eaeaea; --sub:#9a9a9a; --line:#333; --head:#222; } }
+  body { margin:0 auto; max-width:900px; padding:24px 16px; background:var(--bg); color:var(--fg); font:15px/1.6 "Malgun Gothic", system-ui, sans-serif; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  h2 { font-size:17px; margin:32px 0 8px; }
+  p { color:var(--sub); margin:0 0 8px; }
+  nav a { display:inline-block; margin:0 10px 4px 0; color:inherit; }
+  table { width:100%; border-collapse:collapse; }
+  th, td { text-align:left; padding:6px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--head); }
+  td:first-child { width:38%; font-weight:600; }
+</style>
+</head>
+<body>
+<h1>COBBLEVERSE 모드 목록</h1>
+<p>Fabric 1.21.1 · 활성 모드 177개 · 2026-10-13 기준. "(추정)"은 확인하지 못한 설명입니다.</p>
+<nav id="nav"></nav>
+<main id="main"></main>
+<script>
+const data = {
+"포켓몬": [
+["Cobblemon","포켓몬 본체. 포획, 배틀, 진화"],
+["Cobblemon Additions","추가 아이템과 기능 보강 (추정)"],
+["Cobblemon Battle Extras","배틀 화면에 상성 등 추가 정보 표시 (추정)"],
+["Cobblemon Battle Positions","배틀 시 포켓몬과 트레이너 위치 조정 (추정)"],
+["Cobblemon Capture XP","포획하면 파티 포켓몬이 경험치를 얻음"],
+["Cobblemon Raid Dens","여러 명이 강한 포켓몬과 싸우는 레이드 굴"],
+["Cobblenav","주변에 스폰되는 포켓몬을 검색하고 추적하는 기기"],
+["COBBLEVERSE Badges","체육관 배지 아이템 (추정)"],
+["Cobbreeding","포켓몬 교배와 알"],
+["CobbleCuisine","포켓몬 관련 요리와 버프 음식"],
+["CobbleDollars","화폐와 상점"],
+["CobbleFurnies","포켓몬 테마 가구"],
+["Fight or Flight","야생 포켓몬이 플레이어를 공격하거나 도망감"],
+["Mega Showdown","메가진화, Z기술, 다이맥스, 테라스탈"],
+["MoreCobblemonTweaks","PC와 화면 편의 개선 (추정)"],
+["Better Pokédex Scanner","도감 스캐너 개선 (추정)"],
+["LumyMon","Cobbleverse 제작자의 팩 전용 조정 모드 (추정)"],
+["LumyREI","REI에 포켓몬 관련 정보 연동 (추정)"],
+["Only Bottle Caps","개체값을 올리는 병뚜껑 아이템 (추정)"],
+["PastureLoot","목장에 둔 포켓몬이 아이템을 생산"],
+["Safe Pastures","목장에 둔 포켓몬이 피해를 입지 않게 보호"],
+["Pokeblocks","포켓몬 테마 건축 블록 (추정)"],
+["Radical Cobblemon Trainers","월드에 트레이너 NPC가 스폰되고 배틀로 진행"],
+["TM Craft","기술머신 제작과 사용"],
+["zamega","추가 메가진화 (추정)"],
+["Legendary Monuments","전설 포켓몬을 만나는 구조물"],
+["Catch Indicator","이미 잡은 포켓몬인지 표시"],
+["Cobblemon Catch Rate Display","포획 확률 표시"]],
+"퀘스트·NPC·거래": [
+["FTB Quests","퀘스트북과 보상"],
+["FTB Teams","팀 구성, 퀘스트 진행 공유"],
+["Cobblemon Quests","FTB Quests에 포획·배틀·진화 같은 포켓몬 과제 추가"],
+["Easy NPC","커스텀 NPC 본체"],
+["Easy NPC (Bundle)","Easy NPC 구성 묶음"],
+["Easy NPC: Config UI","NPC 설정 화면"],
+["VillagerConfig","주민 거래를 설정 파일과 데이터팩으로 변경"]],
+"서버 성능·안정성": [
+["Lithium","물리, AI, 틱 처리 등 게임 로직 최적화"],
+["FerriteCore","메모리 사용량 절감"],
+["ModernFix","로딩 시간과 메모리 개선, 버그 수정"],
+["C2ME","청크 생성과 로딩을 여러 코어로 처리"],
+["Krypton","네트워크 처리 최적화"],
+["ScalableLux","조명 계산 병렬화"],
+["Clumps","경험치 구슬을 하나로 뭉침"],
+["Fast Noise","지형 노이즈 계산 가속 (추정)"],
+["Debugify","바닐라 버그 수정 모음"],
+["Neruina","오류 난 엔티티 때문에 서버가 죽는 것을 방지"],
+["Packet Fixer","큰 패킷으로 접속이 끊기는 문제 방지"],
+["Not Enough Crashes","크래시 시 게임을 끄지 않고 원인을 보여줌"],
+["StackDeobfuscator","크래시 로그를 읽기 쉬운 이름으로 변환"]],
+"서버 관리·연동": [
+["Chunky","월드 사전 생성"],
+["spark","렉 원인 분석"],
+["BlueMap","브라우저로 보는 실시간 웹 지도"],
+["Simple Discord Link","마크 채팅과 디스코드 채널 연동"],
+["Simple Voice Chat","근접 음성 채팅"],
+["No Chat Restrictions","채팅 신고·서명 관련 제한 해제 (추정)"],
+["Global Data- & Resourcepacks","팩의 데이터팩과 리소스팩을 모든 월드에 자동 적용"],
+["Default Options","팩의 기본 설정과 키 배치 배포"],
+["AdvancementDisable","특정 발전과제 비활성화 (추정)"]],
+"클라이언트 성능·그래픽": [
+["Sodium","렌더링 엔진 교체로 FPS 대폭 향상"],
+["Reese's Sodium Options","Sodium 설정 화면 개선"],
+["Iris","셰이더 지원"],
+["Euphoria Patcher","Complementary 셰이더에 추가 기능을 입히는 패치"],
+["ImmediatelyFast","UI와 글자 렌더링 최적화"],
+["BadOptimizations","자잘한 클라이언트 최적화"],
+["More Culling","보이지 않는 블록 면 렌더링 생략"],
+["EntityCulling","벽 뒤에 가려진 엔티티 렌더링 생략"],
+["Particle Core","파티클 렌더링 최적화"],
+["Better Beds","침대 렌더링 최적화"],
+["Continuity","유리 등 연결 텍스처 지원"],
+["Entity Model Features","리소스팩의 커스텀 엔티티 모델 지원"],
+["Entity Texture Features","엔티티 텍스처 무작위·발광 지원"]],
+"화면·UI·정보": [
+["AppleSkin","음식의 허기·포만감 수치 표시"],
+["Jade","바라보는 블록과 엔티티 정보 표시"],
+["Just Enough Items","아이템과 조합법 검색"],
+["Roughly Enough Items","아이템과 조합법 검색 (JEI와 같은 역할)"],
+["Mod Menu","모드 목록과 설정 진입 화면"],
+["BetterF1","F1로 화면 요소를 숨길 때 세부 조절 (추정)"],
+["BetterF3","F3 디버그 화면 정리"],
+["Better Third Person","3인칭에서 카메라를 캐릭터와 따로 회전"],
+["Better Recipe Book","조합법 책 개선"],
+["Controlling","조작 설정에 검색과 충돌 키 보기 추가"],
+["Advancement Plaques","발전과제 달성을 큰 배너로 표시"],
+["Paginated Advancements","발전과제 탭을 페이지로 나눔"],
+["Overflowing Bars","한계를 넘는 체력·방어구를 겹쳐서 표시"],
+["ToolTip Fix","화면 밖으로 넘치는 툴팁 수정"],
+["Highlight","블록 선택 외곽선 표시 개선 (추정)"],
+["Mouse Tweaks","인벤토리 드래그와 휠 조작"],
+["Zoomify","확대 기능"],
+["FancyMenu","메인 메뉴 등 화면 꾸미기"],
+["Custom Splash Screen","로딩 화면 변경"],
+["Xaero's Minimap","미니맵"],
+["Xaero's World Map","전체 지도"],
+["Better Nether Map","네더에서도 지도 아이템이 제대로 작동 (추정)"],
+["Ping Wheel","위치를 핑으로 찍어 다른 사람에게 표시"],
+["Resource Pack Overrides","팩이 리소스팩 기본 적용과 순서를 지정"],
+["Resource Pack Options","리소스팩에 설정 옵션 제공"]],
+"소리·연출": [
+["Sound Physics Remastered","소리에 반향과 차음 효과"],
+["SoundsBeGone","특정 소리 끄기"],
+["Infinite Music","배경음악이 끊기지 않고 이어짐"],
+["MusicNotification","재생 중인 음악 이름 표시"],
+["Particle Rain","비와 눈을 파티클로 표현"],
+["Particular Reforged","반딧불, 낙엽, 물보라 같은 환경 파티클"],
+["NotEnoughAnimations","3인칭 플레이어 동작 애니메이션 추가"],
+["Visual Workbench","작업대에 올린 재료가 보이고 닫아도 유지"]],
+"편의·게임플레이": [
+["Waystones","웨이스톤 사이 순간이동"],
+["Comforts","침낭과 해먹"],
+["Lenient Death","사망 시 일부 아이템 유지"],
+["Forgiving Void","공허에 떨어지면 죽지 않고 하늘에서 다시 낙하"],
+["Right Click Harvest","우클릭으로 작물 수확과 재파종"],
+["Leaves Be Gone","나무를 베면 나뭇잎이 빠르게 사라짐"],
+["ClickMobs","몹을 인벤토리에 넣어 옮김"],
+["Easy Magic","마법부여대에 아이템이 남고 옵션 재추첨 가능"],
+["Polymorph","조합법이 겹칠 때 결과물 선택"],
+["NetherPortalFix","포탈로 돌아올 때 원래 포탈로 나오게 수정"],
+["KleeSlabs","겹친 반블럭에서 한쪽만 부숨"],
+["Interactic","떨어진 아이템 줍기·던지기 조작 개선 (추정)"],
+["Trinkets","장신구 슬롯"],
+["Accessories","장신구 슬롯 (다른 방식)"],
+["Accessories Compatibility Layer","Trinkets용 모드를 Accessories에서 쓰게 해 줌"],
+["Sophisticated Backpacks","업그레이드 가능한 배낭"],
+["Sophisticated Storage","업그레이드 가능한 상자와 통"],
+["Tom's Simple Storage","상자들을 연결해 한 단말에서 관리"],
+["PlayerXP","플레이어 경험치 관련 기능 (추정)"],
+["Huge Structure Blocks","구조물 블록의 크기 제한 확장"]],
+"건축·장식": [
+["Beautify","밧줄, 블라인드, 화분 같은 장식"],
+["Carved Wood","나무 장식 블록과 가구 (추정)"],
+["Handcrafted","가구"],
+["Cozy Home","가구 (추정)"],
+["Macaw's Lights and Lamps","조명"],
+["Moar Concrete","콘크리트 계단, 반블럭 등"],
+["Rechiseled","끌로 블록 무늬 변형"],
+["Platform","발판 블록 (추정)"],
+["Diagonal Fences","울타리 대각선 연결"],
+["Diagonal Walls","담장 대각선 연결"],
+["Diagonal Windows","유리판 대각선 연결"]],
+"월드·구조물·생물": [
+["Biome Replacer","특정 바이옴을 다른 바이옴으로 교체"],
+["Repurposed Structures","바닐라 구조물의 바이옴별 변형 추가"],
+["Ribbits","개구리 종족 마을"],
+["VanillaBackport","최신 버전 바닐라 콘텐츠를 1.21.1로 가져옴"],
+["MobsBeGone","특정 몹의 스폰 차단 (추정)"]],
+"펫": [
+["Cozy's Improved Cats","고양이에게 성격, 능력, 부활 추가"],
+["Carry Cats","고양이를 어깨에 올림"],
+["Kingdom Cats Replacer","고양이 외형 교체 (클라이언트 전용)"],
+["Companion","펫이 순간이동을 따라오고 위험할 때 물러남"],
+["Respawnable Pets","죽은 펫이 잠잘 때 되살아남"],
+["Adorable Hamster Pets","햄스터 펫 추가"]],
+"라이브러리": [
+["Fabric API","거의 모든 Fabric 모드"],
+["Fabric Language Kotlin","Kotlin으로 만든 모드 (Cobblemon 등)"],
+["Architectury","여러 로더를 지원하는 모드 (FTB, REI 등)"],
+["Balm","Waystones, Default Options 등 같은 제작자 모드"],
+["Cloth Config","여러 모드의 설정 화면"],
+["YetAnotherConfigLib","여러 모드의 설정 화면 (Zoomify 등)"],
+["MidnightLib","설정 라이브러리"],
+["Fzzy Config","설정 라이브러리"],
+["Forge Config API Port","Fuzs 모드 등의 설정"],
+["Puzzles Lib","Fuzs 모드 (Diagonal, Leaves Be Gone, Easy Magic 등)"],
+["Moonlight Lib","MehVahdJukaar 모드"],
+["GeckoLib","애니메이션 모델을 쓰는 모드"],
+["oωo","설정과 화면 구성 (Accessories 등)"],
+["Resourceful Lib","Handcrafted 등"],
+["FTB Library","FTB Quests, FTB Teams"],
+["Iceberg","Advancement Plaques 등"],
+["JamLib","Right Click Harvest"],
+["Kiwi","Companion"],
+["Konkrete","FancyMenu"],
+["Melody","FancyMenu"],
+["LibJF","Resource Pack Options"],
+["CraterLib","Simple Discord Link"],
+["SuperMartijn642 Config Lib","Rechiseled, Fusion"],
+["SuperMartijn642 Core Lib","Rechiseled, Fusion"],
+["YUNG's API","Ribbits"],
+["Tim Core","Capture XP 등 같은 제작자의 Cobblemon 애드온"],
+["RCT API","Radical Cobblemon Trainers"],
+["Sophisticated Core","Sophisticated Backpacks, Storage"],
+["Searchables","Controlling"],
+["Athena","연결 텍스처용 (추정)"],
+["Fusion","연결 텍스처용 (Rechiseled)"],
+["Configurable","설정 라이브러리 (추정)"]]
+};
+const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+let nav = "", main = "", i = 0;
+for (const [cat, mods] of Object.entries(data)) {
+  const lib = cat === "라이브러리";
+  nav += `<a href="#c${i}">${cat} (${mods.length})</a>`;
+  main += `<h2 id="c${i++}">${cat} (${mods.length})</h2>`
+    + (lib ? "<p>혼자서는 기능이 없고 다른 모드가 요구하는 선행 모드입니다.</p>" : "")
+    + `<table><tr><th>모드</th><th>${lib ? "주로 쓰는 곳" : "설명"}</th></tr>`
+    + mods.map(([n, d]) => `<tr><td>${esc(n)}</td><td>${esc(d)}</td></tr>`).join("") + "</table>";
+}
+document.getElementById("nav").innerHTML = nav;
+document.getElementById("main").innerHTML = main;
+</script>
+</body>
+</html>
