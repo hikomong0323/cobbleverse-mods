@@ -7,12 +7,14 @@
 <style>
   :root { --bg:#fff; --fg:#1a1a1a; --sub:#666; --line:#ddd; --head:#f4f4f4; }
   @media (prefers-color-scheme: dark) { :root { --bg:#161616; --fg:#eaeaea; --sub:#9a9a9a; --line:#333; --head:#222; } }
-  body { margin:0 auto; max-width:900px; padding:24px 16px; background:var(--bg); color:var(--fg); font:15px/1.6 "Malgun Gothic", system-ui, sans-serif; }
+  body { margin:0 auto; max-width:1500px; padding:24px 16px; background:var(--bg); color:var(--fg); font:15px/1.6 "Malgun Gothic", system-ui, sans-serif; }
   h1 { font-size:22px; margin:0 0 4px; }
   h2 { font-size:20px; margin:40px 0 8px; padding-bottom:6px; border-bottom:2px solid var(--line); }
   h3 { font-size:15px; margin:20px 0 6px; color:var(--sub); }
   p { color:var(--sub); margin:0 0 8px; }
-  nav a { display:inline-block; margin:0 10px 4px 0; color:inherit; }
+  main { display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
+  @media (max-width:800px) { main { grid-template-columns:1fr; } }
+  .only { font-size:11px; font-weight:400; padding:1px 6px; border:1px solid var(--line); border-radius:8px; color:var(--sub); white-space:nowrap; }
   table { width:100%; border-collapse:collapse; }
   th, td { text-align:left; padding:6px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
   th { background:var(--head); }
@@ -22,8 +24,7 @@
 <body>
 <h1>푸키몬 서버 모드 목록</h1>
 <p>Fabric 1.21.1 · 활성 모드 177개 · 2026-10-13 기준. "(추정)"은 확인하지 못한 설명입니다.</p>
-<p>설치 위치는 각 모드 파일에 적힌 실행 환경 값과 모드의 기능을 기준으로 나눴습니다. 라이브러리는 그 모드를 쓰는 쪽에 함께 넣습니다.</p>
-<nav id="nav"></nav>
+<p>설치 위치는 각 모드 파일에 적힌 실행 환경 값과 모드의 기능을 기준으로 나눴습니다. 양쪽에 모두 필요한 모드는 두 목록에 다 나오고, 한쪽에만 넣는 모드는 "전용"으로 표시했습니다.</p>
 <main id="main"></main>
 <script>
 const data = {
@@ -219,24 +220,20 @@ const data = {
 };
 const client = new Set(["Advancement Plaques","BadOptimizations","Better Beds","BetterF1","BetterF3","Better Third Person","Better Recipe Book","Catch Indicator","Cobblemon Catch Rate Display","Continuity","Controlling","Custom Splash Screen","Kingdom Cats Replacer","Entity Model Features","Entity Texture Features","Euphoria Patcher","ImmediatelyFast","Infinite Music","Iris","LumyREI","Mod Menu","More Culling","Mouse Tweaks","MusicNotification","Overflowing Bars","Paginated Advancements","Particle Core","Particle Rain","Reese's Sodium Options","Resource Pack Overrides","Searchables","Sodium","SoundsBeGone","ToolTip Fix","Zoomify","FancyMenu","Konkrete","Melody","Xaero's Minimap","Xaero's World Map","EntityCulling","NotEnoughAnimations","Sound Physics Remastered"]);
 const server = new Set(["Chunky","spark","BlueMap","Simple Discord Link","CraterLib"]);
-const groups = ["서버 + 클라이언트 (양쪽에 설치)", "클라이언트 전용", "서버 전용"];
-const where = n => client.has(n) ? 1 : server.has(n) ? 2 : 0;
+const sides = [["클라이언트", n => !server.has(n)], ["서버", n => !client.has(n)]];
+const only = n => client.has(n) || server.has(n) ? ' <span class="only">전용</span>' : "";
 const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
-let nav = "", main = "";
-groups.forEach((g, gi) => {
+document.getElementById("main").innerHTML = sides.map(([title, keep]) => {
   let body = "", count = 0;
   for (const [cat, all] of Object.entries(data)) {
-    const mods = all.filter(([n]) => where(n) === gi);
+    const mods = all.filter(([n]) => keep(n));
     if (!mods.length) continue;
     count += mods.length;
     body += `<h3>${cat} (${mods.length})</h3><table><tr><th>모드</th><th>${cat === "라이브러리" ? "주로 쓰는 곳" : "설명"}</th></tr>`
-      + mods.map(([n, d]) => `<tr><td>${esc(n)}</td><td>${esc(d)}</td></tr>`).join("") + "</table>";
+      + mods.map(([n, d]) => `<tr><td>${esc(n)}${only(n)}</td><td>${esc(d)}</td></tr>`).join("") + "</table>";
   }
-  nav += `<a href="#g${gi}">${g} (${count})</a>`;
-  main += `<h2 id="g${gi}">${g} (${count})</h2>` + body;
-});
-document.getElementById("nav").innerHTML = nav;
-document.getElementById("main").innerHTML = main;
+  return `<section><h2>${title} (${count})</h2>${body}</section>`;
+}).join("");
 </script>
 </body>
 </html>
