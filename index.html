@@ -23,7 +23,7 @@
 </head>
 <body>
 <h1>푸키몬 서버 모드 목록</h1>
-<p>Fabric 1.21.1 · 활성 모드 177개 · 2026-10-13 기준. "(추정)"은 확인하지 못한 설명입니다.</p>
+<p>Fabric 1.21.1 · 활성 모드 198개 · 2026-10-13 기준. "(추정)"은 확인하지 못한 설명입니다.</p>
 <p>설치 위치는 각 모드 파일에 적힌 실행 환경 값과 모드의 기능을 기준으로 나눴습니다. 양쪽에 모두 필요한 모드는 두 목록에 다 나오고, 한쪽에만 넣는 모드는 "전용"으로 표시했습니다.</p>
 <main id="main"></main>
 <script>
@@ -56,7 +56,27 @@ const data = {
 ["zamega","추가 메가진화 (추정)"],
 ["Legendary Monuments","전설 포켓몬을 만나는 구조물"],
 ["Catch Indicator","이미 잡은 포켓몬인지 표시"],
-["Cobblemon Catch Rate Display","포획 확률 표시"]],
+["Cobblemon Catch Rate Display","포획 확률 표시"],
+["Cobblemon: Ride On!","포켓몬 탑승"],
+["Cobblemon Journey Mounts","탑승 가능한 포켓몬 추가"],
+["CobbleSpawnAlert Reforged","희귀 포켓몬 출현·포획 알림, 디스코드 웹훅"],
+["Spawn Notification","전설·이로치 출현을 서버 전체에 알림"],
+["Cobblemon Integrations","JEI, Jade 등 다른 모드와 포켓몬 정보 연동"],
+["Cobbleworkers","목장에 둔 포켓몬에게 작업을 시킴"],
+["Cobblemarks+","마크(칭호) 추가"],
+["CobbleWeather","날씨에 따라 야생 포켓몬 개체값이 좋아짐"],
+["Radical Gyms & Structures","트레이너 체육관 구조물 생성"],
+["Cobbleloots","월드에 아이템 볼 배치"],
+["Cobblemon Size Variation","포켓몬 크기 다양화"],
+["Cobblemon Alpha Project","강한 알파 포켓몬 자연 스폰"],
+["Cobblemon Trials Edition","몹 스포너를 포켓몬 스포너로 교체"],
+["Cobblemon Battle Tower","엔드 콘텐츠 배틀 타워"],
+["Counter","처치·포획 횟수와 연속 기록"],
+["Cobbled Gacha","뽑기 기계"],
+["Berry Pouch","열매 주머니 등 수납 도구"],
+["Cobblemon Party Extras","파티 화면에 설명과 팀 분석 추가"],
+["Cobblemon Stone Statues","포켓몬 석상 장식"],
+["Cobblemon Minimons","미니 포켓몬 모형 장식"]],
 "퀘스트·NPC·거래": [
 ["FTB Quests","퀘스트북과 보상"],
 ["FTB Teams","팀 구성, 퀘스트 진행 공유"],
@@ -216,10 +236,11 @@ const data = {
 ["Searchables","Controlling"],
 ["Athena","연결 텍스처용 (추정)"],
 ["Fusion","연결 텍스처용 (Rechiseled)"],
-["Configurable","설정 라이브러리 (추정)"]]
+["Configurable","설정 라이브러리 (추정)"],
+["Wild Battle API","Cobblemon Battle Tower"]]
 };
-const client = new Set(["Advancement Plaques","BadOptimizations","Better Beds","BetterF1","BetterF3","Better Third Person","Better Recipe Book","Catch Indicator","Cobblemon Catch Rate Display","Continuity","Controlling","Custom Splash Screen","Kingdom Cats Replacer","Entity Model Features","Entity Texture Features","Euphoria Patcher","ImmediatelyFast","Infinite Music","Iris","LumyREI","Mod Menu","More Culling","Mouse Tweaks","MusicNotification","Overflowing Bars","Paginated Advancements","Particle Core","Particle Rain","Reese's Sodium Options","Resource Pack Overrides","Searchables","Sodium","SoundsBeGone","ToolTip Fix","Zoomify","FancyMenu","Konkrete","Melody","Xaero's Minimap","Xaero's World Map","EntityCulling","NotEnoughAnimations","Sound Physics Remastered"]);
-const server = new Set(["Chunky","spark","BlueMap","Simple Discord Link","CraterLib"]);
+const client = new Set(["Advancement Plaques","BadOptimizations","Better Beds","BetterF1","BetterF3","Better Third Person","Better Recipe Book","Catch Indicator","Cobblemon Catch Rate Display","Continuity","Controlling","Custom Splash Screen","Kingdom Cats Replacer","Entity Model Features","Entity Texture Features","Euphoria Patcher","ImmediatelyFast","Infinite Music","Iris","LumyREI","Mod Menu","More Culling","Mouse Tweaks","MusicNotification","Overflowing Bars","Paginated Advancements","Particle Core","Particle Rain","Reese's Sodium Options","Resource Pack Overrides","Searchables","Sodium","SoundsBeGone","ToolTip Fix","Zoomify","FancyMenu","Konkrete","Melody","Xaero's Minimap","Xaero's World Map","EntityCulling","NotEnoughAnimations","Sound Physics Remastered","Cobblemon Party Extras"]);
+const server = new Set(["Chunky","spark","BlueMap","Simple Discord Link","CraterLib","Spawn Notification","Cobbleworkers"]);
 const sides = [["클라이언트", n => !server.has(n)], ["서버", n => !client.has(n)]];
 const only = n => client.has(n) || server.has(n) ? ' <span class="only">전용</span>' : "";
 const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
